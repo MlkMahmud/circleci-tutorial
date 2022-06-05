@@ -7,7 +7,7 @@ commands:
           name: Install AWS CLI
           command: |
             sudo apt-get update
-            sudo apt-get install install_aws_cli
+            sudo apt-get install awscli
             mkdir ~/.aws/
             touch ~/.aws/credentials
             touch ~/.aws/config
