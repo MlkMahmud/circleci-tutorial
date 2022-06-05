@@ -1,0 +1,46 @@
+version: 2.1
+
+commands:
+  install_aws_cli:
+    steps:
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo apt-get update
+            sudo apt-get install install_aws_cli
+            mkdir ~/.aws/
+            touch ~/.aws/credentials
+            touch ~/.aws/config
+            aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+            aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+            aws configure set default.region us-east-1
+
+jobs:
+  QA:
+    docker:
+      - image: cimg/node:14.18.1
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install deps
+          command: npm install
+      - run:
+          name: Run Tests
+          command: npm test
+      - install_aws_cli
+      - run:
+          name: Upload Coverage results to S3
+          command: |
+            aws s3 rm s3://${AWS_S3_BUCKET} --recursive
+            aws s3 cp coverage/lcov-report/ s3:${AWS_S3_BUCKET} --recursive
+            aws s3 ls s3://${AWS_S3_BUCKET} 
+
+
+workflows:
+  main:
+    when:
+      and:
+        - equal: [main, << pipeline.git.branch >>]
+    jobs:
+      - QA
