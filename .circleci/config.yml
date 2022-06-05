@@ -33,7 +33,8 @@ jobs:
           name: Upload Coverage results to S3
           command: |
             aws s3 rm s3://${AWS_S3_BUCKET} --recursive
-            aws s3 cp coverage/lcov-report/ s3:${AWS_S3_BUCKET} --recursive
+            ls -a
+            aws s3 cp coverage/lcov-report/ s3://${AWS_S3_BUCKET} --recursive
             aws s3 ls s3://${AWS_S3_BUCKET} 
 
 
