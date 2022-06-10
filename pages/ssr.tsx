@@ -19,10 +19,11 @@ export default function Users({ users }: any) {
 }
 
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req }) {
   const response = await fetch('https://jsonplaceholder.typicode.com/users');
   const users = await response.json();
 
+  console.log(req.headers);
   return {
     props: { users }
   }
