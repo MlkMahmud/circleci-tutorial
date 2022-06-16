@@ -105,3 +105,6 @@ dist
 
 
 junit.xml
+
+
+.lighthouseci/

@@ -1,25 +1,10 @@
 version: 2.1
-
-commands:
-  install_aws_cli:
-    steps:
-      - run:
-          name: Install AWS CLI
-          command: |
-            sudo apt-get update
-            sudo apt-get install awscli
-            mkdir ~/.aws/
-            touch ~/.aws/credentials
-            touch ~/.aws/config
-            aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-            aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-            aws configure set default.region us-east-1
+orbs: 
+  aws-cli: circleci/aws-cli@3.1.1
 
 jobs:
   QA:
-    docker:
-      - image: cimg/node:14.18.1
-    resource_class: small
+    executor: aws-cli/default
     steps:
       - checkout
       - run:
@@ -28,7 +13,10 @@ jobs:
       - run:
           name: Run Tests
           command: npm test
-      - install_aws_cli
+      - aws-cli/setup:
+          aws-access-key-id: ${AWS_ACCESS_KEY_ID}
+          aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+          aws-region: us-east-1
       - run:
           name: Upload Coverage results to S3
           command: |
@@ -36,7 +24,6 @@ jobs:
             ls -a
             aws s3 cp coverage/lcov-report/ s3://${AWS_S3_BUCKET} --recursive
             aws s3 ls s3://${AWS_S3_BUCKET} 
-
 
 workflows:
   main:
