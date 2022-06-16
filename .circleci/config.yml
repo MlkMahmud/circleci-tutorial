@@ -16,13 +16,14 @@ jobs:
       - aws-cli/setup:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_DEFAULT_REGION
       - run:
           name: Upload Coverage results to S3
           command: |
-            aws s3 rm ${AWS_S3_BUCKET} --recursive
+            aws s3 rm s3://${AWS_S3_BUCKET} --recursive
             ls -a
-            aws s3 cp coverage/lcov-report/ $AWS_S3_BUCKET --recursive
-            aws s3 ls $AWS_S3_BUCKET 
+            aws s3 cp coverage/lcov-report/ s3://${AWS_S3_BUCKET} --recursive
+            aws s3 ls s3://${AWS_S3_BUCKET} 
 
 workflows:
   main:
