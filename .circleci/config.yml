@@ -16,7 +16,7 @@ jobs:
       - aws-cli/setup:
           aws-access-key-id: ${AWS_ACCESS_KEY_ID}
           aws-secret-access-key: ${AWS_SECRET_ACCESS_KEY}
-          aws-region: us-east-1
+          aws-region: 'us-east-1'
       - run:
           name: Upload Coverage results to S3
           command: |
