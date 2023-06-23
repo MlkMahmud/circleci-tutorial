@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-if [ "${CI}" = "true" ]
+if [ $CI="true" ]
 then
   touch hello.txt
   echo "what it do, baybee!!!" >> hello.txt
