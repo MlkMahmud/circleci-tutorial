@@ -3,32 +3,25 @@ orbs:
   aws-cli: circleci/aws-cli@3.1.1
 
 jobs:
-  QA:
-    executor: aws-cli/default
+  test:
+    docker:
+      - image: cimg/node:18.15.0
     steps:
       - checkout
       - run:
-          name: Install deps
-          command: npm install
+          name: Install dependencies
+          command: npm ci
       - run:
-          name: Run Tests
-          command: npm test
-      - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          aws-region: AWS_DEFAULT_REGION
-      - run:
-          name: Upload Coverage results to S3
+          environment:
+            HUSKY_DEBUG: 1
+          name: build
           command: |
-            aws s3 rm s3://${AWS_S3_BUCKET} --recursive
+            npm version 0.0.1
             ls -a
-            aws s3 cp coverage/lcov-report/ s3://${AWS_S3_BUCKET} --recursive
-            aws s3 ls s3://${AWS_S3_BUCKET} 
-
 workflows:
   main:
     when:
       and:
-        - equal: [main, << pipeline.git.branch >>]
+        - equal: [test, << pipeline.git.branch >>]
     jobs:
-      - QA
+      - test
