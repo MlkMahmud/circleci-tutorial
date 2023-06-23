@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-if [ "${CI}" == "true" || $CI == true ]; then
+if [ "${CI}" = "true" ]; then
   touch hello.txt
   echo "what it do, baybee!!!" >> hello.txt
   cat hello.txt
 else
   touch welcome.txt
-  echo "CI: ${CI}" >> hello.txt
+  echo "CI: ${CI}" >> welcome.txt
   cat welcome.txt
 fi
