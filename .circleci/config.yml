@@ -12,6 +12,11 @@ jobs:
           name: Install dependencies
           command: npm ci
       - run:
+          name: Configure git
+          command: |
+            git config user.name "Senor Mann"
+            git config user.email "senormann@email.com"
+      - run:
           environment:
             HUSKY_DEBUG: 1
           name: build
